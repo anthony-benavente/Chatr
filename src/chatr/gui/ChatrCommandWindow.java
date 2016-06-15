@@ -1,4 +1,4 @@
-package chatr.gui.cmd;
+package chatr.gui;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
