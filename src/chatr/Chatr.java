@@ -10,21 +10,40 @@ import java.awt.event.WindowEvent;
 import java.util.Scanner;
 
 /**
- * TODO: Describe me
+ * Chatr is a networked chat application written in Java. This class is the
+ * entry point to the program and takes no parameters on execution.
  *
  * @author Anthony Benavente
  * @version 6/12/16
  */
 public class Chatr {
 
+    /**
+     * This is the window we use to display the output from the server.
+     */
     private ChatrCommandWindow window;
 
+    /**
+     * This is used for gathering user input.
+     */
     private Scanner in;
 
+    /**
+     * This is the user's username that is displayed when the user sends out
+     * messages.
+     */
     private String username;
 
+    /**
+     * This is the client used to talk to the server
+     */
     private ChatrClient client;
 
+    /**
+     * Creates a new Chatr application. Creating a Chatr object immediately
+     * pops up the output window and asks the user for information on
+     * connecting to the server.
+     */
     public Chatr() {
         window = new ChatrCommandWindow();
         window.setVisible(true);
@@ -39,6 +58,12 @@ public class Chatr {
         });
     }
 
+    /**
+     * Starts the application. This creates the network client, starts it, and
+     * starts the input loop.
+     *
+     * @throws ChatrClientException if something goes wrong
+     */
     public void start() throws ChatrClientException {
         createClient();
         client.go();
@@ -58,12 +83,18 @@ public class Chatr {
         exit();
     }
 
+    /**
+     * This is called to quit the application without pressing the X button.
+     */
     private void exit() {
         window.setVisible(false);
         window.dispose();
         client.stop();
     }
 
+    /**
+     * This creates our client.
+     */
     private void createClient() {
         boolean validHostAndPort;
         do {
@@ -85,16 +116,23 @@ public class Chatr {
         });
     }
 
+    /**
+     * Prompts the user to type in a line of input with the given prompt.
+     *
+     * @param prompt the message to show the user upon asking for input
+     * @return the user's line of input
+     */
     private String prompt(String prompt) {
         System.out.print(prompt);
         return in.nextLine();
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
 
+    /**
+     * This is the entry point to the program. No arguments are used.
+     *
+     * @param args Unused
+     */
     public static void main(String[] args) {
         Chatr app = new Chatr();
         try {
