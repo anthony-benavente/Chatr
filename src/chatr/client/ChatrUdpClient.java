@@ -21,6 +21,11 @@ public class ChatrUdpClient extends ChatrAbstractClient{
     private DatagramSocket socket;
 
     /**
+     * This is the thread that runs to listen for server messages.
+     */
+    private Thread listenerThread;
+
+    /**
      * Creates a new ChatrUdpClient with the specified information.
      *
      * @param hostname the address of the machine we are connecting to
@@ -53,7 +58,8 @@ public class ChatrUdpClient extends ChatrAbstractClient{
     @Override
     public void go() throws ChatrClientException {
         // Start the client listener to listen if the server tells us stuff
-        new Thread(new ClientListener()).start();
+        listenerThread = new Thread(new ClientListener());
+        listenerThread.start();
 
         // Send a login message to the server
         login();
@@ -117,6 +123,21 @@ public class ChatrUdpClient extends ChatrAbstractClient{
     }
 
     /**
+     * This sends the server a logout message.
+     */
+    @Override
+    public void stop() {
+        try {
+            logout();
+            socket.close();
+            listenerThread.interrupt();
+        } catch (ChatrClientException e) {
+            System.err.println("Failed to logout: " +
+                    e.getWrapped().getMessage());
+        }
+    }
+
+    /**
      * This mini-class is used to start a thread that notifies listeners
      * whenever this client recieves data.
      */
@@ -131,7 +152,7 @@ public class ChatrUdpClient extends ChatrAbstractClient{
                 DatagramPacket recv = new DatagramPacket(buf, buf.length);
 
                 // Keep going while we aren't interrupted
-                while (!Thread.currentThread().isInterrupted()) {
+                while (!socket.isClosed()) {
                     socket.receive(recv);
 
                     /*
@@ -156,8 +177,10 @@ public class ChatrUdpClient extends ChatrAbstractClient{
                 }
             } catch (InterruptedException ignored) {
             } catch (IOException e) {
-                System.err.println("Something went wrong while listening..."
-                        + e.getMessage());
+                if (!socket.isClosed()) {
+                    System.err.println("Something went wrong while listening: "
+                            + e.getMessage());
+                }
             }
         }
     }

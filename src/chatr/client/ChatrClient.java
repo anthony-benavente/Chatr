@@ -48,4 +48,9 @@ public interface ChatrClient {
      */
     void sendMessage(String message) throws ChatrClientException;
 
+    /**
+     * This method should notify the server that the client is quitting (our
+     * clients should have good manners).
+     */
+    void stop();
 }
