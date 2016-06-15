@@ -45,6 +45,13 @@ public class Chatr {
                 }
             }
         } while (!input.equals("\\quit"));
+        exit();
+    }
+
+    private void exit() {
+        window.setVisible(false);
+        window.dispose();
+        client.stop();
     }
 
     private void createClient() {
@@ -71,6 +78,11 @@ public class Chatr {
     private String prompt(String prompt) {
         System.out.print(prompt);
         return in.nextLine();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
     }
 
     public static void main(String[] args) {
