@@ -53,7 +53,10 @@ public class Chatr {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
-                client.stop();
+
+                if (client != null) {
+                    client.stop();
+                }
             }
         });
     }

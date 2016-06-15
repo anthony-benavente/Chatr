@@ -128,9 +128,11 @@ public class ChatrUdpClient extends ChatrAbstractClient{
     @Override
     public void stop() {
         try {
-            logout();
-            socket.close();
-            listenerThread.interrupt();
+            if (socket != null) {
+                logout();
+                socket.close();
+                listenerThread.interrupt();
+            }
         } catch (ChatrClientException e) {
             System.err.println("Failed to logout: " +
                     e.getWrapped().getMessage());
