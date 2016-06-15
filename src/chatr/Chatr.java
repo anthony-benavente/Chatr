@@ -5,6 +5,8 @@ import chatr.client.ChatrClientException;
 import chatr.client.ChatrUdpClient;
 import chatr.gui.ChatrCommandWindow;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Scanner;
 
 /**
@@ -27,6 +29,14 @@ public class Chatr {
         window = new ChatrCommandWindow();
         window.setVisible(true);
         in = new Scanner(System.in);
+
+        window.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                client.stop();
+            }
+        });
     }
 
     public void start() throws ChatrClientException {
